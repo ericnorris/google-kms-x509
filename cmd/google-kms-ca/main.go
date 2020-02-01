@@ -7,7 +7,7 @@ import (
 var rootCmd = &cobra.Command{
 	Use:   "google-kms-ca",
 	Short: "",
-	Long: ``,
+	Long:  ``,
 }
 
 func main() {

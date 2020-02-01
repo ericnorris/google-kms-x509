@@ -1,20 +1,21 @@
 package main
 
 import (
-  "fmt"
+	"fmt"
 
-  "github.com/spf13/cobra"
+	"github.com/spf13/cobra"
 )
 
 func init() {
-  rootCmd.AddCommand(csrCmd)
+
+	rootCmd.AddCommand(csrCmd)
 }
 
 var csrCmd = &cobra.Command{
-  Use:   "csr",
-  Short: "",
-  Long:  ``,
-  Run: func(cmd *cobra.Command, args []string) {
-    fmt.Println("meow")
-  },
+	Use:   "csr",
+	Short: "",
+	Long:  ``,
+	Run: func(cmd *cobra.Command, args []string) {
+		fmt.Println("meow")
+	},
 }
