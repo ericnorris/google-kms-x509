@@ -1,9 +1,15 @@
 package main
 
 import (
-	"fmt"
+	"github.com/spf13/cobra"
 )
 
+var rootCmd = &cobra.Command{
+	Use:   "google-kms-ca",
+	Short: "",
+	Long: ``,
+}
+
 func main() {
-	fmt.Println("meow")
+	rootCmd.Execute()
 }
