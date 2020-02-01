@@ -5,7 +5,7 @@ import (
 )
 
 var rootCmd = &cobra.Command{
-	Use:   "google-kms-ca",
+	Use:   "google-kms-x509",
 	Short: "",
 	Long:  ``,
 }

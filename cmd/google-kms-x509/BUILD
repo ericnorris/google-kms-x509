@@ -6,13 +6,13 @@ go_library(
         "csr.go",
         "main.go",
     ],
-    importpath = "github.com/ericnorris/google-kms-ca/cmd/google-kms-ca",
+    importpath = "github.com/ericnorris/google-kms-x509/cmd/google-kms-x509",
     visibility = ["//visibility:private"],
     deps = ["@com_github_spf13_cobra//:go_default_library"],
 )
 
 go_binary(
-    name = "google-kms-ca",
+    name = "google-kms-x509",
     embed = [":go_default_library"],
     visibility = ["//visibility:public"],
 )
