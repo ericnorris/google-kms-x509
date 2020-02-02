@@ -5,10 +5,9 @@ import (
 	"crypto/x509"
 	"crypto/x509/pkix"
 	"encoding/pem"
-	"crypto/rand"
 
 	cloudkms "cloud.google.com/go/kms/apiv1"
-	kmspb "google.golang.org/genproto/googleapis/cloud/kms/v1"
+	"github.com/ericnorris/google-kms-x509/kmssign"
 )
 
 func Generate(keyName string, subject pkix.Name) (string, error) {
@@ -19,37 +18,7 @@ func Generate(keyName string, subject pkix.Name) (string, error) {
 		return "", err
 	}
 
-	key, err := client.GetCryptoKeyVersion(ctx, &kmspb.GetCryptoKeyVersionRequest{
-		Name: keyName,
-	})
-
-	if err != nil {
-		return "", err
-	}
-
-	var signatureAlgorithm x509.SignatureAlgorithm
-
-	signatureAlgorithm = x509.ECDSAWithSHA256
-
-	switch key.Algorithm {
-	case kmspb.CryptoKeyVersion_RSA_SIGN_PKCS1_2048_SHA256:
-		fallthrough
-	case kmspb.CryptoKeyVersion_RSA_SIGN_PKCS1_3072_SHA256:
-		fallthrough
-	case kmspb.CryptoKeyVersion_RSA_SIGN_PKCS1_4096_SHA256:
-		signatureAlgorithm = x509.SHA256WithRSA
-
-	case kmspb.CryptoKeyVersion_RSA_SIGN_PKCS1_4096_SHA512:
-		signatureAlgorithm = x509.SHA512WithRSA
-
-	case kmspb.CryptoKeyVersion_EC_SIGN_P256_SHA256:
-		signatureAlgorithm = x509.ECDSAWithSHA256
-
-	case kmspb.CryptoKeyVersion_EC_SIGN_P384_SHA384:
-		signatureAlgorithm = x509.ECDSAWithSHA384
-	}
-
-	signer, err := NewGoogleKMSSigner(client, key)
+	signer, err := kmssign.NewGoogleKMSSigner(ctx, client, keyName)
 
 	if err != nil {
 		return "", err
@@ -57,10 +26,9 @@ func Generate(keyName string, subject pkix.Name) (string, error) {
 
 	template := &x509.CertificateRequest{
 		Subject: subject,
-		SignatureAlgorithm: signatureAlgorithm,
 	}
 
-	rawCSR, err := x509.CreateCertificateRequest(rand.Reader, template, signer)
+	rawCSR, err := signer.CreateCertificateRequest(template)
 
 	if err != nil {
 		return "", err
