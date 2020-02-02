@@ -94,12 +94,13 @@ func init() {
 			}
 
 			template := &x509.Certificate{
-				Subject:        subject,
-				IsCA:           true,
-				MaxPathLen:     0,
-				MaxPathLenZero: false,
-				NotBefore:      now,
-				NotAfter:       now.AddDate(0, 0, days),
+				Subject:               subject,
+				BasicConstraintsValid: true,
+				IsCA:                  true,
+				MaxPathLen:            0,
+				MaxPathLenZero:        false,
+				NotBefore:             now,
+				NotAfter:              now.AddDate(0, 0, days),
 
 				KeyUsage: x509.KeyUsageDigitalSignature |
 					x509.KeyUsageCRLSign |
