@@ -1,2 +1,5 @@
 # ignore bazel symlinks
 bazel-*
+
+# ignore the development service account key
+service-account.json

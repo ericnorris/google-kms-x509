@@ -6,6 +6,7 @@ import (
 	"fmt"
 
 	"github.com/spf13/cobra"
+	"github.com/ericnorris/google-kms-x509/csr"
 )
 
 var oidEmailAddress = asn1.ObjectIdentifier{1, 2, 840, 113549, 1, 9, 1}
@@ -40,7 +41,7 @@ func init() {
 				},
 			}
 
-			fmt.Println(subject)
+			fmt.Println(csr.Generate(key, subject))
 		},
 	}
 
