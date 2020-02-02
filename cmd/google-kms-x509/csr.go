@@ -5,8 +5,8 @@ import (
 	"encoding/asn1"
 	"fmt"
 
-	"github.com/spf13/cobra"
 	"github.com/ericnorris/google-kms-x509/csr"
+	"github.com/spf13/cobra"
 )
 
 var oidEmailAddress = asn1.ObjectIdentifier{1, 2, 840, 113549, 1, 9, 1}
@@ -27,18 +27,36 @@ func init() {
 		Long:  ``,
 		Run: func(cmd *cobra.Command, args []string) {
 			subject := pkix.Name{
-				CommonName:         commonName,
-				Country:            []string{country},
-				Province:           []string{province},
-				Locality:           []string{locality},
-				Organization:       []string{organization},
-				OrganizationalUnit: []string{organizationalUnit},
-				ExtraNames: []pkix.AttributeTypeAndValue{
+				CommonName: commonName,
+			}
+
+			if country != "" {
+				subject.Country = []string{country}
+			}
+
+			if province != "" {
+				subject.Province = []string{province}
+			}
+
+			if locality != "" {
+				subject.Locality = []string{locality}
+			}
+
+			if organization != "" {
+				subject.Organization = []string{organization}
+			}
+
+			if organizationalUnit != "" {
+				subject.OrganizationalUnit = []string{organizationalUnit}
+			}
+
+			if emailAddress != "" {
+				subject.ExtraNames = []pkix.AttributeTypeAndValue{
 					{
 						Type:  oidEmailAddress,
 						Value: emailAddress,
 					},
-				},
+				}
 			}
 
 			fmt.Println(csr.Generate(key, subject))
