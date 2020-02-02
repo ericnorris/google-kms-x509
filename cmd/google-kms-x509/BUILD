@@ -4,13 +4,16 @@ go_library(
     name = "go_default_library",
     srcs = [
         "csr.go",
+        "generate-root.go",
         "main.go",
     ],
     importpath = "github.com/ericnorris/google-kms-x509/cmd/google-kms-x509",
     visibility = ["//visibility:private"],
     deps = [
         "//csr:go_default_library",
+        "//kmssign:go_default_library",
         "@com_github_spf13_cobra//:go_default_library",
+        "@com_google_cloud_go//kms/apiv1:go_default_library",
     ],
 )
 
