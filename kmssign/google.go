@@ -4,7 +4,10 @@ import (
 	"context"
 	"crypto"
 	"crypto/rand"
+	"crypto/sha1"
 	"crypto/x509"
+	"crypto/x509/pkix"
+	"encoding/asn1"
 	"encoding/pem"
 	"fmt"
 	"io"
@@ -12,6 +15,8 @@ import (
 	cloudkms "cloud.google.com/go/kms/apiv1"
 	kmspb "google.golang.org/genproto/googleapis/cloud/kms/v1"
 )
+
+var nsCommentOID = asn1.ObjectIdentifier{2, 16, 840, 1, 113730, 1, 13}
 
 type GoogleKMSSigner struct {
 	// not ideal, but crypto.Signer doesn't have an obvious way to pass in a context.
@@ -93,7 +98,22 @@ func (signer *GoogleKMSSigner) CreateCertificate(
 		return nil, fmt.Errorf("Cannot sign certificate with a non-CA certificate")
 	}
 
+	subjectKeyId, err := computeSubjectKeyIdentifier(signee)
+
+	if err != nil {
+		return nil, fmt.Errorf("Could not compute subject key identifier: %w", err)
+	}
+
 	template.SignatureAlgorithm = signer.signatureAlgorithm
+	template.SubjectKeyId = subjectKeyId
+
+	template.ExtraExtensions = append(
+		template.ExtraExtensions,
+		pkix.Extension{
+			Id:    nsCommentOID,
+			Value: []byte(fmt.Sprintf("Signed with KMS key: %s", signer.keyVersion.Name)),
+		},
+	)
 
 	rawCertificate, err := x509.CreateCertificate(
 		rand.Reader,
@@ -243,4 +263,26 @@ func getPublicKey(
 	}
 
 	return publicKey, nil
+}
+
+// https://tools.ietf.org/html/rfc3280#section-4.2.1.2
+func computeSubjectKeyIdentifier(subjectPublicKey crypto.PublicKey) ([]byte, error) {
+	derEncodedPublicKey, err := x509.MarshalPKIXPublicKey(subjectPublicKey)
+
+	if err != nil {
+		return nil, err
+	}
+
+	asn1PublicKey := struct {
+		Algorithm        pkix.AlgorithmIdentifier
+		SubjectPublicKey asn1.BitString
+	}{}
+
+	if _, err := asn1.Unmarshal(derEncodedPublicKey, &asn1PublicKey); err != nil {
+		return nil, err
+	}
+
+	subjectKeyIdentifier := sha1.Sum(asn1PublicKey.SubjectPublicKey.Bytes)
+
+	return subjectKeyIdentifier[:], nil
 }
