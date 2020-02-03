@@ -11,6 +11,7 @@ import (
 	"encoding/pem"
 	"fmt"
 	"io"
+	"math/big"
 
 	cloudkms "cloud.google.com/go/kms/apiv1"
 	kmspb "google.golang.org/genproto/googleapis/cloud/kms/v1"
@@ -104,14 +105,21 @@ func (signer *GoogleKMSSigner) CreateCertificate(
 		return nil, fmt.Errorf("Could not compute subject key identifier: %w", err)
 	}
 
+	serialNumber, err := generateSerialNumber()
+
+	if err != nil {
+		return nil, fmt.Errorf("Could not generate serial number: %w", err)
+	}
+
 	template.SignatureAlgorithm = signer.signatureAlgorithm
 	template.SubjectKeyId = subjectKeyId
+	template.SerialNumber = serialNumber
 
 	template.ExtraExtensions = append(
 		template.ExtraExtensions,
 		pkix.Extension{
 			Id:    nsCommentOID,
-			Value: []byte(fmt.Sprintf("Signed with KMS key: %s", signer.keyVersion.Name)),
+			Value: []byte(fmt.Sprintf("Signed with Google KMS key: %s", signer.keyVersion.Name)),
 		},
 	)
 
@@ -285,4 +293,13 @@ func computeSubjectKeyIdentifier(subjectPublicKey crypto.PublicKey) ([]byte, err
 	subjectKeyIdentifier := sha1.Sum(asn1PublicKey.SubjectPublicKey.Bytes)
 
 	return subjectKeyIdentifier[:], nil
+}
+
+func generateSerialNumber() (*big.Int, error) {
+	serialNumberMax := new(big.Int)
+
+	serialNumberMax.Exp(big.NewInt(2), big.NewInt(64), nil)
+	serialNumberMax.Sub(serialNumberMax, big.NewInt(1))
+
+	return rand.Int(rand.Reader, serialNumberMax)
 }
