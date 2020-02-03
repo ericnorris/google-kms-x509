@@ -19,6 +19,7 @@ func SignIntermediateCA(
 	subject pkix.Name,
 	days int,
 	pathLen int,
+	permittedDNSDomains []string,
 	out *os.File,
 ) {
 	ctx := context.Background()
@@ -51,6 +52,11 @@ func SignIntermediateCA(
 		KeyUsage: x509.KeyUsageDigitalSignature |
 			x509.KeyUsageCRLSign |
 			x509.KeyUsageCertSign,
+	}
+
+	if len(permittedDNSDomains) > 0 {
+		intermediateCertificateTemplate.PermittedDNSDomainsCritical = true
+		intermediateCertificateTemplate.PermittedDNSDomains = permittedDNSDomains
 	}
 
 	certificateBytes, err := kmsSigner.CreateCertificate(

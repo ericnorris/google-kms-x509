@@ -28,6 +28,7 @@ var signIntermediateCACmd = &cobra.Command{
 			convertSubjectFlagsToName(),
 			days,
 			intermediateCAPathLen,
+			intermediateCAPermittedDNSDomains,
 			convertOutFlagsToFile(),
 		)
 	},
@@ -45,9 +46,8 @@ var (
 	parentCertPath string
 	childCSRPath   string
 
-	intermediateCAPathLen           int
-	intermediateCAPermittedDNSNames []string
-	intermediateCAPermittedIPRanges []string
+	intermediateCAPathLen             int
+	intermediateCAPermittedDNSDomains []string
 
 	leafDNSNames    []string
 	leafIPAddresses []net.IP
@@ -77,6 +77,13 @@ func init() {
 	// 'sign intermediate-ca' only flags
 	signIntermediateCACmd.Flags().IntVar(
 		&intermediateCAPathLen, "path-len", 0, "number of intermediate CAs allowed under this CA",
+	)
+
+	signIntermediateCACmd.Flags().StringSliceVar(
+		&intermediateCAPermittedDNSDomains,
+		"permitted-dns-domains",
+		[]string{},
+		"permitted DNS names for x509 Name Constraints",
 	)
 
 	signCmd.AddCommand(signIntermediateCACmd)
