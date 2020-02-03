@@ -141,17 +141,19 @@ func (signer *GoogleKMSSigner) CreateCertificate(
 func (signer *GoogleKMSSigner) CreateSelfSignedCertificate(
 	template *x509.Certificate,
 ) (cert []byte, err error) {
+	if signer.certificate == nil {
+		return nil, fmt.Errorf("Cannot create self signed certificate with a parent")
+	}
+
 	signer.certificate = template
 
 	rawCertificate, err := signer.CreateCertificate(template, signer.publicKey)
 
 	if err != nil {
 		signer.certificate = nil
-
-		return nil, err
 	}
 
-	return rawCertificate, nil
+	return rawCertificate, err
 }
 
 func (signer *GoogleKMSSigner) CreateCertificateRequest(
