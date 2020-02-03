@@ -1,0 +1,83 @@
+package cli
+
+import (
+	"context"
+	"crypto/x509"
+	"crypto/x509/pkix"
+	"encoding/pem"
+	"net"
+	"os"
+	"time"
+
+	cloudkms "cloud.google.com/go/kms/apiv1"
+	"github.com/ericnorris/google-kms-x509/kmssign"
+)
+
+func SignLeaf(
+	kmsKey string,
+	parentCert *x509.Certificate,
+	childCSR *x509.CertificateRequest,
+	subject pkix.Name,
+	days int,
+	dnsNames []string,
+	ipAddresses []net.IP,
+	isServer bool,
+	isClient bool,
+	out *os.File,
+) {
+	ctx := context.Background()
+	client, err := cloudkms.NewKeyManagementClient(ctx)
+
+	if err != nil {
+		panic(err)
+	}
+
+	kmsSigner, err := kmssign.NewGoogleKMSSignerWithCertificate(ctx, client, kmsKey, parentCert)
+
+	if err != nil {
+		panic(err)
+	}
+
+	now := time.Now()
+
+	// TODO override child CSR subject fields with flags
+	// TODO validate child CSR
+
+	leafCertificateTemplate := &x509.Certificate{
+		Subject:               childCSR.Subject,
+		BasicConstraintsValid: true,
+		IsCA:                  false,
+		NotBefore:             now,
+		NotAfter:              now.AddDate(0, 0, days),
+
+		KeyUsage: x509.KeyUsageDigitalSignature | x509.KeyUsageKeyEncipherment,
+
+		DNSNames:    dnsNames,
+		IPAddresses: ipAddresses,
+	}
+
+	if isServer {
+		leafCertificateTemplate.ExtKeyUsage = append(
+			leafCertificateTemplate.ExtKeyUsage,
+			x509.ExtKeyUsageServerAuth,
+		)
+	}
+
+	if isClient {
+		leafCertificateTemplate.ExtKeyUsage = append(
+			leafCertificateTemplate.ExtKeyUsage,
+			x509.ExtKeyUsageClientAuth,
+		)
+	}
+
+	certificateBytes, err := kmsSigner.CreateCertificate(
+		leafCertificateTemplate,
+		childCSR.PublicKey,
+	)
+
+	if err != nil {
+		panic(err)
+	}
+
+	pem.Encode(out, &pem.Block{Type: "CERTIFICATE", Bytes: certificateBytes})
+}

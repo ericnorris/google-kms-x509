@@ -6,6 +6,7 @@ go_library(
         "generate-csr.go",
         "generate-root-ca.go",
         "sign-intermediate-ca.go",
+        "sign-leaf.go",
     ],
     importpath = "github.com/ericnorris/google-kms-x509/internal/cli",
     visibility = ["//:__subpackages__"],

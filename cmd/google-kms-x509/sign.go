@@ -39,6 +39,18 @@ var signLeafCmd = &cobra.Command{
 	Short: "",
 	Long:  ``,
 	Run: func(cmd *cobra.Command, args []string) {
+		cli.SignLeaf(
+			kmsKey,
+			convertParentCertFlagsToCertificate(),
+			convertChildCSRFlagsToCertificateRequest(),
+			convertSubjectFlagsToName(),
+			days,
+			leafDNSNames,
+			leafIPAddresses,
+			leafIsServer,
+			leafIsClient,
+			convertOutFlagsToFile(),
+		)
 	},
 }
 
@@ -83,7 +95,36 @@ func init() {
 		&intermediateCAPermittedDNSDomains,
 		"permitted-dns-domains",
 		[]string{},
-		"permitted DNS names for x509 Name Constraints",
+		"permitted DNS names for x509 Name Constraints extension",
+	)
+
+	// 'sign leaf' only flags
+	signLeafCmd.Flags().StringSliceVar(
+		&leafDNSNames,
+		"dns-names",
+		[]string{},
+		"DNS names for x509 Subject Alternative Names extension",
+	)
+
+	signLeafCmd.Flags().IPSliceVar(
+		&leafIPAddresses,
+		"ip-addresses",
+		[]net.IP{},
+		"IP addresses for x509 Subject Alternative Names extension",
+	)
+
+	signLeafCmd.Flags().BoolVar(
+		&leafIsServer,
+		"server",
+		false,
+		"sign as a server cert",
+	)
+
+	signLeafCmd.Flags().BoolVar(
+		&leafIsClient,
+		"client",
+		false,
+		"sign as a client certificate",
 	)
 
 	signCmd.AddCommand(signIntermediateCACmd)
