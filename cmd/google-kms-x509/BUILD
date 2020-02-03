@@ -3,10 +3,12 @@ load("@io_bazel_rules_go//go:def.bzl", "go_binary", "go_library")
 go_library(
     name = "go_default_library",
     srcs = [
+        "days-flags.go",
         "generate.go",
         "key-flags.go",
         "main.go",
         "out-flags.go",
+        "sign.go",
         "subject-flags.go",
     ],
     importpath = "github.com/ericnorris/google-kms-x509/cmd/google-kms-x509",

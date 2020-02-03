@@ -12,6 +12,7 @@ var mainCmd = &cobra.Command{
 
 func main() {
 	mainCmd.AddCommand(generateCmd)
+	mainCmd.AddCommand(signCmd)
 
 	mainCmd.Execute()
 }
