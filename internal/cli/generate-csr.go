@@ -5,13 +5,13 @@ import (
 	"crypto/x509"
 	"crypto/x509/pkix"
 	"encoding/pem"
-	"fmt"
+	"os"
 
 	cloudkms "cloud.google.com/go/kms/apiv1"
 	"github.com/ericnorris/google-kms-x509/kmssign"
 )
 
-func GenerateCSR(kmsKey string, subject pkix.Name) {
+func GenerateCSR(kmsKey string, subject pkix.Name, out *os.File) {
 	ctx := context.Background()
 	client, err := cloudkms.NewKeyManagementClient(ctx)
 
@@ -35,7 +35,5 @@ func GenerateCSR(kmsKey string, subject pkix.Name) {
 		panic(err)
 	}
 
-	pemCSR := pem.EncodeToMemory(&pem.Block{Type: "CERTIFICATE REQUEST", Bytes: csrBytes})
-
-	fmt.Println(string(pemCSR))
+	pem.Encode(out, &pem.Block{Type: "CERTIFICATE REQUEST", Bytes: csrBytes})
 }

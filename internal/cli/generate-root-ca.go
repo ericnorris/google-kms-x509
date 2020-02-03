@@ -5,14 +5,14 @@ import (
 	"crypto/x509"
 	"crypto/x509/pkix"
 	"encoding/pem"
-	"fmt"
+	"os"
 	"time"
 
 	cloudkms "cloud.google.com/go/kms/apiv1"
 	"github.com/ericnorris/google-kms-x509/kmssign"
 )
 
-func GenerateRootCA(kmsKey string, subject pkix.Name, days int) {
+func GenerateRootCA(kmsKey string, subject pkix.Name, days int, out *os.File) {
 	ctx := context.Background()
 	client, err := cloudkms.NewKeyManagementClient(ctx)
 
@@ -48,7 +48,5 @@ func GenerateRootCA(kmsKey string, subject pkix.Name, days int) {
 		panic(err)
 	}
 
-	certificate := pem.EncodeToMemory(&pem.Block{Type: "CERTIFICATE", Bytes: certificateBytes})
-
-	fmt.Println(string(certificate))
+	pem.Encode(out, &pem.Block{Type: "CERTIFICATE", Bytes: certificateBytes})
 }

@@ -6,6 +6,7 @@ go_library(
         "generate.go",
         "key-flags.go",
         "main.go",
+        "out-flags.go",
         "subject-flags.go",
     ],
     importpath = "github.com/ericnorris/google-kms-x509/cmd/google-kms-x509",

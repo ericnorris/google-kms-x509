@@ -20,32 +20,32 @@ var (
 )
 
 func addSubjectFlags(cmd *cobra.Command) {
-	cmd.Flags().StringVarP(
-		&commonName, "common-name", "", "", "x509 Distinguished Name (DN) field",
+	cmd.Flags().StringVar(
+		&commonName, "common-name", "", "x509 Distinguished Name (DN) field",
 	)
 
-	cmd.Flags().StringVarP(
-		&country, "country", "", "", "x509 Distinguished Name (DN) field",
+	cmd.Flags().StringVar(
+		&country, "country", "", "x509 Distinguished Name (DN) field",
 	)
 
-	cmd.Flags().StringVarP(
-		&province, "province", "", "", "x509 Distinguished Name (DN) field",
+	cmd.Flags().StringVar(
+		&province, "province", "", "x509 Distinguished Name (DN) field",
 	)
 
-	cmd.Flags().StringVarP(
-		&locality, "locality", "", "", "x509 Distinguished Name (DN) field",
+	cmd.Flags().StringVar(
+		&locality, "locality", "", "x509 Distinguished Name (DN) field",
 	)
 
-	cmd.Flags().StringVarP(
-		&organization, "organization", "", "", "x509 Distinguished Name (DN) field",
+	cmd.Flags().StringVar(
+		&organization, "organization", "", "x509 Distinguished Name (DN) field",
 	)
 
-	cmd.Flags().StringVarP(
-		&organizationalUnit, "organizationalUnit", "", "", "x509 Distinguished Name (DN) field",
+	cmd.Flags().StringVar(
+		&organizationalUnit, "organizationalUnit", "", "x509 Distinguished Name (DN) field",
 	)
 
-	cmd.Flags().StringVarP(
-		&emailAddress, "emailAddress", "", "", "x509 Distinguished Name (DN) field",
+	cmd.Flags().StringVar(
+		&emailAddress, "emailAddress", "", "x509 Distinguished Name (DN) field",
 	)
 
 	cmd.MarkFlagRequired("common-name")

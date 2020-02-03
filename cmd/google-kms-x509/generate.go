@@ -20,6 +20,7 @@ var generateRootCACmd = &cobra.Command{
 			kmsKey,
 			convertSubjectFlagsToName(),
 			rootCADays,
+			convertOutFlagsToFile(),
 		)
 	},
 }
@@ -32,6 +33,7 @@ var generateCSRCmd = &cobra.Command{
 		cli.GenerateCSR(
 			kmsKey,
 			convertSubjectFlagsToName(),
+			convertOutFlagsToFile(),
 		)
 	},
 }
@@ -47,7 +49,10 @@ func init() {
 	addSubjectFlags(generateRootCACmd)
 	addSubjectFlags(generateCSRCmd)
 
-	generateRootCACmd.Flags().IntVarP(&rootCADays, "days", "", 0, "days until expiration")
+	addOutFlags(generateRootCACmd)
+	addOutFlags(generateCSRCmd)
+
+	generateRootCACmd.Flags().IntVar(&rootCADays, "days", 0, "days until expiration")
 	generateRootCACmd.MarkFlagRequired("days")
 
 	generateCmd.AddCommand(generateRootCACmd)
