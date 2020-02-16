@@ -40,7 +40,9 @@ func SignLeaf(
 
 	now := time.Now()
 
-	// TODO validate child CSR
+	if err := childCSR.CheckSignature(); err != nil {
+		panic(err)
+	}
 
 	leafCertificateTemplate := &x509.Certificate{
 		Subject:               subject,

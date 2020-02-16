@@ -37,7 +37,9 @@ func SignIntermediateCA(
 
 	now := time.Now()
 
-	// TODO validate child CSR
+	if err := childCSR.CheckSignature(); err != nil {
+		panic(err)
+	}
 
 	intermediateCertificateTemplate := &x509.Certificate{
 		Subject:               subject,
