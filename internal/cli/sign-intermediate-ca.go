@@ -37,11 +37,10 @@ func SignIntermediateCA(
 
 	now := time.Now()
 
-	// TODO override child CSR subject fields with flags
 	// TODO validate child CSR
 
 	intermediateCertificateTemplate := &x509.Certificate{
-		Subject:               childCSR.Subject,
+		Subject:               subject,
 		BasicConstraintsValid: true,
 		IsCA:                  true,
 		MaxPathLen:            pathLen,

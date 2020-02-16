@@ -40,11 +40,10 @@ func SignLeaf(
 
 	now := time.Now()
 
-	// TODO override child CSR subject fields with flags
 	// TODO validate child CSR
 
 	leafCertificateTemplate := &x509.Certificate{
-		Subject:               childCSR.Subject,
+		Subject:               subject,
 		BasicConstraintsValid: true,
 		IsCA:                  false,
 		NotBefore:             now,
