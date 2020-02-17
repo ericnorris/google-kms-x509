@@ -185,7 +185,7 @@ func (signer *GoogleKMSSigner) Sign(
 ) (signature []byte, err error) {
 	if opts.HashFunc() != signer.hashFunction {
 		return nil, fmt.Errorf(
-			"Unexpected hash function, got: %s, wanted %s", opts.HashFunc(), signer.hashFunction,
+			"Unexpected hash function, got: %v, wanted %v", opts.HashFunc(), signer.hashFunction,
 		)
 	}
 
@@ -202,7 +202,7 @@ func (signer *GoogleKMSSigner) Sign(
 		kmspbDigest = kmspb.Digest{Digest: &kmspb.Digest_Sha512{Sha512: digest}}
 
 	default:
-		return nil, fmt.Errorf("Cannot convert hash function %s to KMS digest", opts.HashFunc())
+		return nil, fmt.Errorf("Cannot convert hash function %v to KMS digest", opts.HashFunc())
 	}
 
 	signRequest := &kmspb.AsymmetricSignRequest{
