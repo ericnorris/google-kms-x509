@@ -4,3 +4,14 @@ load("@bazel_gazelle//:def.bzl", "gazelle")
 # gazelle:proto disable_global
 # gazelle:build_file_name BUILD
 gazelle(name = "gazelle")
+
+load("@io_bazel_rules_go//go:def.bzl", "nogo")
+
+nogo(
+    name = "nogo",
+    vet  = True,
+
+    deps = [],
+
+    visibility = ["//visibility:public"],
+)

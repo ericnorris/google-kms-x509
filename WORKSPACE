@@ -19,7 +19,7 @@ load(
 
 go_rules_dependencies()
 
-go_register_toolchains()
+go_register_toolchains(nogo="@//:nogo")
 
 # generate Go BUILD files automatically with gazelle
 
