@@ -13,13 +13,13 @@ go_library(
     ],
     importpath = "github.com/ericnorris/google-kms-x509/cmd/google-kms-x509",
     visibility = ["//visibility:private"],
+    x_defs = {
+        "Version": "{STABLE_GIT_VERSION}",
+    },
     deps = [
         "//internal/cli:go_default_library",
         "@com_github_spf13_cobra//:go_default_library",
     ],
-    x_defs = {
-        "Version": "{STABLE_GIT_VERSION}",
-    }
 )
 
 go_binary(

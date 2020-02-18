@@ -9,9 +9,7 @@ load("@io_bazel_rules_go//go:def.bzl", "nogo")
 
 nogo(
     name = "nogo",
-    vet  = True,
-
+    vet = True,
     deps = [],
-
     visibility = ["//visibility:public"],
 )
