@@ -1,0 +1,44 @@
+name: ci
+
+on:
+  push:
+    branches:
+      - '**'
+
+    paths-ignore:
+      - '**.md'
+
+jobs:
+
+  build:
+    name:    build
+    runs-on: ubuntu-latest
+
+    steps:
+
+      - name: checkout
+        uses: actions/checkout@v2
+
+      - name: install bazel
+        run: |
+          curl https://bazel.build/bazel-release.pub.gpg | sudo apt-key add -
+
+          echo "deb [arch=amd64] https://storage.googleapis.com/bazel-apt stable jdk1.8" \
+            | sudo tee /etc/apt/sources.list.d/bazel.list
+
+          sudo apt update && sudo apt install bazel
+        env:
+          APT_KEY_DONT_WARN_ON_DANGEROUS_USAGE: DontWarn
+
+      - name: run tests
+        run: |
+          bazel test --platforms="@io_bazel_rules_go//go/toolchain:linux_amd64" //...
+
+      - name: build linux binary
+        run: |
+          bazel build --platforms="@io_bazel_rules_go//go/toolchain:linux_amd64" //...
+
+
+      - name: build macos binary
+        run: |
+          bazel build --platforms="@io_bazel_rules_go//go/toolchain:darwin_amd64" //...
