@@ -23,6 +23,7 @@ var signIntermediateCACmd = &cobra.Command{
 	Run: func(cmd *cobra.Command, args []string) {
 		cli.SignIntermediateCA(
 			kmsKey,
+			kmsKeyComment,
 			convertParentCertFlagsToCertificate(),
 			convertChildCSRFlagsToCertificateRequest(),
 			convertSubjectFlagsToName(),
@@ -41,6 +42,7 @@ var signLeafCmd = &cobra.Command{
 	Run: func(cmd *cobra.Command, args []string) {
 		cli.SignLeaf(
 			kmsKey,
+			kmsKeyComment,
 			convertParentCertFlagsToCertificate(),
 			convertChildCSRFlagsToCertificateRequest(),
 			convertSubjectFlagsToName(),

@@ -90,6 +90,7 @@ func NewGoogleKMSSignerWithCertificate(
 func (signer *GoogleKMSSigner) CreateCertificate(
 	template *x509.Certificate,
 	signee crypto.PublicKey,
+	kmsKeyComment bool,
 ) (cert []byte, err error) {
 	if signer.certificate == nil {
 		return nil, fmt.Errorf("Cannot sign child certificate without a parent")
@@ -115,13 +116,15 @@ func (signer *GoogleKMSSigner) CreateCertificate(
 	template.SubjectKeyId = subjectKeyId
 	template.SerialNumber = serialNumber
 
-	template.ExtraExtensions = append(
-		template.ExtraExtensions,
-		pkix.Extension{
-			Id:    nsCommentOID,
-			Value: []byte(fmt.Sprintf("Signed with Google KMS key: %s", signer.keyVersion.Name)),
-		},
-	)
+	if kmsKeyComment {
+		template.ExtraExtensions = append(
+			template.ExtraExtensions,
+			pkix.Extension{
+				Id:    nsCommentOID,
+				Value: []byte(fmt.Sprintf("Signed with Google KMS key: %s", signer.keyVersion.Name)),
+			},
+		)
+	}
 
 	rawCertificate, err := x509.CreateCertificate(
 		rand.Reader,
@@ -140,6 +143,7 @@ func (signer *GoogleKMSSigner) CreateCertificate(
 
 func (signer *GoogleKMSSigner) CreateSelfSignedCertificate(
 	template *x509.Certificate,
+	kmsKeyComment bool,
 ) (cert []byte, err error) {
 	if signer.certificate != nil {
 		return nil, fmt.Errorf("Cannot create self signed certificate with a parent")
@@ -147,7 +151,7 @@ func (signer *GoogleKMSSigner) CreateSelfSignedCertificate(
 
 	signer.certificate = template
 
-	rawCertificate, err := signer.CreateCertificate(template, signer.publicKey)
+	rawCertificate, err := signer.CreateCertificate(template, signer.publicKey, kmsKeyComment)
 
 	if err != nil {
 		signer.certificate = nil

@@ -54,6 +54,7 @@ Flags:
       --emailAddress string         x509 Distinguished Name (DN) field
   -h, --help                        help for root-ca
   -k, --kms-key string              Google KMS key resource ID
+      --kms-key-comment             use Google KMS key fully qualified path as x.509 comment (default true)
       --locality string             x509 Distinguished Name (DN) field
       --organization string         x509 Distinguished Name (DN) field
       --organizationalUnit string   x509 Distinguished Name (DN) field
@@ -96,6 +97,7 @@ Flags:
       --emailAddress string             x509 Distinguished Name (DN) field
   -h, --help                            help for intermediate-ca
   -k, --kms-key string                  Google KMS key resource ID
+      --kms-key-comment                 use Google KMS key fully qualified path as x.509 comment (default true)
       --locality string                 x509 Distinguished Name (DN) field
       --organization string             x509 Distinguished Name (DN) field
       --organizationalUnit string       x509 Distinguished Name (DN) field
@@ -125,6 +127,7 @@ Flags:
   -h, --help                        help for leaf
       --ip-addresses ipSlice        IP addresses for x509 Subject Alternative Names extension (default [])
   -k, --kms-key string              Google KMS key resource ID
+      --kms-key-comment             use Google KMS key fully qualified path as x.509 comment (default true)
       --locality string             x509 Distinguished Name (DN) field
       --organization string         x509 Distinguished Name (DN) field
       --organizationalUnit string   x509 Distinguished Name (DN) field
