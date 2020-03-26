@@ -14,7 +14,7 @@ import (
 
 func SignIntermediateCA(
 	kmsKey string,
-	kmsKeyComment bool,
+	generateComment bool,
 	parentCert *x509.Certificate,
 	childCSR *x509.CertificateRequest,
 	subject pkix.Name,
@@ -64,7 +64,7 @@ func SignIntermediateCA(
 	certificateBytes, err := kmsSigner.CreateCertificate(
 		intermediateCertificateTemplate,
 		childCSR.PublicKey,
-		kmsKeyComment,
+		generateComment,
 	)
 
 	if err != nil {

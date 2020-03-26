@@ -5,12 +5,12 @@ import (
 )
 
 var (
-	kmsKey        string
-	kmsKeyComment bool
+	kmsKey          string
+	generateComment bool
 )
 
 func addKeyFlags(cmd *cobra.Command) {
 	cmd.Flags().StringVarP(&kmsKey, "kms-key", "k", "", "Google KMS key resource ID")
-	cmd.Flags().BoolVar(&kmsKeyComment, "kms-key-comment", true, "use Google KMS key fully qualified path as x.509 comment")
+	cmd.Flags().BoolVar(&generateComment, "generate-comment", true, "generate an x509 comment showing the Google KMS key resource ID used")
 	cmd.MarkFlagRequired("kms-key")
 }

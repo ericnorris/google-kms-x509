@@ -14,7 +14,7 @@ import (
 
 func GenerateRootCA(
 	kmsKey string,
-	kmsKeyComment bool,
+	generateComment bool,
 	subject pkix.Name,
 	days int,
 	out *os.File,
@@ -48,7 +48,10 @@ func GenerateRootCA(
 			x509.KeyUsageCertSign,
 	}
 
-	certificateBytes, err := kmsSigner.CreateSelfSignedCertificate(rootCertificateTemplate, kmsKeyComment)
+	certificateBytes, err := kmsSigner.CreateSelfSignedCertificate(
+		rootCertificateTemplate,
+		generateComment,
+	)
 
 	if err != nil {
 		panic(err)

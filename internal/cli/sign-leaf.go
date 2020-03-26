@@ -15,7 +15,7 @@ import (
 
 func SignLeaf(
 	kmsKey string,
-	kmsKeyComment bool,
+	generateComment bool,
 	parentCert *x509.Certificate,
 	childCSR *x509.CertificateRequest,
 	subject pkix.Name,
@@ -75,7 +75,7 @@ func SignLeaf(
 	certificateBytes, err := kmsSigner.CreateCertificate(
 		leafCertificateTemplate,
 		childCSR.PublicKey,
-		kmsKeyComment,
+		generateComment,
 	)
 
 	if err != nil {

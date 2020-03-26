@@ -18,7 +18,7 @@ var generateRootCACmd = &cobra.Command{
 	Run: func(cmd *cobra.Command, args []string) {
 		cli.GenerateRootCA(
 			kmsKey,
-			kmsKeyComment,
+			generateComment,
 			convertSubjectFlagsToName(),
 			days,
 			convertOutFlagsToFile(),
@@ -33,6 +33,7 @@ var generateCSRCmd = &cobra.Command{
 	Run: func(cmd *cobra.Command, args []string) {
 		cli.GenerateCSR(
 			kmsKey,
+			generateComment,
 			convertSubjectFlagsToName(),
 			convertOutFlagsToFile(),
 		)

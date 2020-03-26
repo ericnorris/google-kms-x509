@@ -11,7 +11,7 @@ import (
 	"github.com/ericnorris/google-kms-x509/kmssign"
 )
 
-func GenerateCSR(kmsKey string, subject pkix.Name, out *os.File) {
+func GenerateCSR(kmsKey string, generateComment bool, subject pkix.Name, out *os.File) {
 	ctx := context.Background()
 	client, err := cloudkms.NewKeyManagementClient(ctx)
 
@@ -29,7 +29,7 @@ func GenerateCSR(kmsKey string, subject pkix.Name, out *os.File) {
 		Subject: subject,
 	}
 
-	csrBytes, err := kmsSigner.CreateCertificateRequest(template)
+	csrBytes, err := kmsSigner.CreateCertificateRequest(template, generateComment)
 
 	if err != nil {
 		panic(err)
