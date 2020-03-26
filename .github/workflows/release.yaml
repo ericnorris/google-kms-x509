@@ -51,6 +51,10 @@ jobs:
           draft:        true
           prerelease:   false
 
+      - name: trim refs/tags/ from tag name
+        id:   trim_ref
+        run: |
+          echo ::set-output name=version::${GITHUB_REF/refs\/tags\//}
 
       - name: upload linux binary
         uses: actions/upload-release-asset@v1
@@ -59,7 +63,7 @@ jobs:
         with:
           upload_url: ${{ steps.create_release.outputs.upload_url }}
           asset_path: bazel-bin/cmd/google-kms-x509/linux_amd64_pure_stripped/google-kms-x509
-          asset_name: google-kms-x509-linux-amd64-${{ github.ref }}
+          asset_name: google-kms-x509-linux-amd64-${{ steps.trim_ref.outputs.version }}
           asset_content_type: application/octet-stream
 
       - name: upload macos binary
@@ -69,5 +73,5 @@ jobs:
         with:
           upload_url: ${{ steps.create_release.outputs.upload_url }}
           asset_path: bazel-bin/cmd/google-kms-x509/darwin_amd64_pure_stripped/google-kms-x509
-          asset_name: google-kms-x509-macos-amd64-${{ github.ref }}
+          asset_name: google-kms-x509-macos-amd64-${{ steps.trim_ref.outputs.version }}
           asset_content_type: application/octet-stream
