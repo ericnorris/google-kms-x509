@@ -52,6 +52,7 @@ Flags:
       --country string              x509 Distinguished Name (DN) field
       --days int                    days until expiration
       --emailAddress string         x509 Distinguished Name (DN) field
+      --generate-comment            generate an x509 comment showing the Google KMS key resource ID used (default true)
   -h, --help                        help for root-ca
   -k, --kms-key string              Google KMS key resource ID
       --locality string             x509 Distinguished Name (DN) field
@@ -71,6 +72,7 @@ Flags:
       --common-name string          x509 Distinguished Name (DN) field
       --country string              x509 Distinguished Name (DN) field
       --emailAddress string         x509 Distinguished Name (DN) field
+      --generate-comment            generate an x509 comment showing the Google KMS key resource ID used (default true)
   -h, --help                        help for csr
   -k, --kms-key string              Google KMS key resource ID
       --locality string             x509 Distinguished Name (DN) field
@@ -94,6 +96,7 @@ Flags:
       --country string                  x509 Distinguished Name (DN) field
       --days int                        days until expiration
       --emailAddress string             x509 Distinguished Name (DN) field
+      --generate-comment                generate an x509 comment showing the Google KMS key resource ID used (default true)
   -h, --help                            help for intermediate-ca
   -k, --kms-key string                  Google KMS key resource ID
       --locality string                 x509 Distinguished Name (DN) field
@@ -122,6 +125,7 @@ Flags:
       --days int                    days until expiration
       --dns-names strings           DNS names for x509 Subject Alternative Names extension
       --emailAddress string         x509 Distinguished Name (DN) field
+      --generate-comment            generate an x509 comment showing the Google KMS key resource ID used (default true)
   -h, --help                        help for leaf
       --ip-addresses ipSlice        IP addresses for x509 Subject Alternative Names extension (default [])
   -k, --kms-key string              Google KMS key resource ID

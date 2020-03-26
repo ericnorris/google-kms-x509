@@ -12,7 +12,13 @@ import (
 	"github.com/ericnorris/google-kms-x509/kmssign"
 )
 
-func GenerateRootCA(kmsKey string, subject pkix.Name, days int, out *os.File) {
+func GenerateRootCA(
+	kmsKey string,
+	generateComment bool,
+	subject pkix.Name,
+	days int,
+	out *os.File,
+) {
 	ctx := context.Background()
 	client, err := cloudkms.NewKeyManagementClient(ctx)
 
@@ -42,7 +48,10 @@ func GenerateRootCA(kmsKey string, subject pkix.Name, days int, out *os.File) {
 			x509.KeyUsageCertSign,
 	}
 
-	certificateBytes, err := kmsSigner.CreateSelfSignedCertificate(rootCertificateTemplate)
+	certificateBytes, err := kmsSigner.CreateSelfSignedCertificate(
+		rootCertificateTemplate,
+		generateComment,
+	)
 
 	if err != nil {
 		panic(err)

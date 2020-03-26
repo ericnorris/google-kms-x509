@@ -90,6 +90,7 @@ func NewGoogleKMSSignerWithCertificate(
 func (signer *GoogleKMSSigner) CreateCertificate(
 	template *x509.Certificate,
 	signee crypto.PublicKey,
+	generateComment bool,
 ) (cert []byte, err error) {
 	if signer.certificate == nil {
 		return nil, fmt.Errorf("Cannot sign child certificate without a parent")
@@ -115,13 +116,14 @@ func (signer *GoogleKMSSigner) CreateCertificate(
 	template.SubjectKeyId = subjectKeyId
 	template.SerialNumber = serialNumber
 
-	template.ExtraExtensions = append(
-		template.ExtraExtensions,
-		pkix.Extension{
+	if generateComment {
+		nsCommentExt := pkix.Extension{
 			Id:    nsCommentOID,
 			Value: []byte(fmt.Sprintf("Signed with Google KMS key: %s", signer.keyVersion.Name)),
-		},
-	)
+		}
+
+		template.ExtraExtensions = append(template.ExtraExtensions, nsCommentExt)
+	}
 
 	rawCertificate, err := x509.CreateCertificate(
 		rand.Reader,
@@ -140,6 +142,7 @@ func (signer *GoogleKMSSigner) CreateCertificate(
 
 func (signer *GoogleKMSSigner) CreateSelfSignedCertificate(
 	template *x509.Certificate,
+	generateComment bool,
 ) (cert []byte, err error) {
 	if signer.certificate != nil {
 		return nil, fmt.Errorf("Cannot create self signed certificate with a parent")
@@ -147,7 +150,7 @@ func (signer *GoogleKMSSigner) CreateSelfSignedCertificate(
 
 	signer.certificate = template
 
-	rawCertificate, err := signer.CreateCertificate(template, signer.publicKey)
+	rawCertificate, err := signer.CreateCertificate(template, signer.publicKey, generateComment)
 
 	if err != nil {
 		signer.certificate = nil
@@ -158,8 +161,18 @@ func (signer *GoogleKMSSigner) CreateSelfSignedCertificate(
 
 func (signer *GoogleKMSSigner) CreateCertificateRequest(
 	template *x509.CertificateRequest,
+	generateComment bool,
 ) (cert []byte, err error) {
 	template.SignatureAlgorithm = signer.signatureAlgorithm
+
+	if generateComment {
+		nsCommentExt := pkix.Extension{
+			Id:    nsCommentOID,
+			Value: []byte(fmt.Sprintf("Signed with Google KMS key: %s", signer.keyVersion.Name)),
+		}
+
+		template.ExtraExtensions = append(template.ExtraExtensions, nsCommentExt)
+	}
 
 	rawCertificateRequest, err := x509.CreateCertificateRequest(
 		rand.Reader,
