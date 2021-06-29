@@ -246,6 +246,16 @@ func determineSignatureAlgorithm(
 	case kmspb.CryptoKeyVersion_RSA_SIGN_PKCS1_4096_SHA512:
 		return x509.SHA512WithRSA, crypto.SHA512, nil
 
+	case kmspb.CryptoKeyVersion_RSA_SIGN_PSS_2048_SHA256:
+		fallthrough
+	case kmspb.CryptoKeyVersion_RSA_SIGN_PSS_3072_SHA256:
+		fallthrough
+	case kmspb.CryptoKeyVersion_RSA_SIGN_PSS_4096_SHA256:
+		return x509.SHA256WithRSAPSS, crypto.SHA256, nil
+
+	case kmspb.CryptoKeyVersion_RSA_SIGN_PSS_4096_SHA512:
+		return x509.SHA512WithRSAPSS, crypto.SHA512, nil
+
 	case kmspb.CryptoKeyVersion_EC_SIGN_P256_SHA256:
 		return x509.ECDSAWithSHA256, crypto.SHA256, nil
 
