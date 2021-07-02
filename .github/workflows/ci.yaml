@@ -2,11 +2,10 @@ name: ci
 
 on:
   push:
-    branches:
-      - '**'
-
     paths-ignore:
       - '**.md'
+
+  pull_request:
 
 jobs:
 
