@@ -30,6 +30,7 @@ var signIntermediateCACmd = &cobra.Command{
 			days,
 			intermediateCAPathLen,
 			intermediateCAPermittedDNSDomains,
+			crlDistributionPoints,
 			convertOutFlagsToFile(),
 		)
 	},
@@ -51,6 +52,7 @@ var signLeafCmd = &cobra.Command{
 			leafIPAddresses,
 			leafIsServer,
 			leafIsClient,
+			crlDistributionPoints,
 			convertOutFlagsToFile(),
 		)
 	},
@@ -87,6 +89,9 @@ func init() {
 
 	addOutFlags(signIntermediateCACmd)
 	addOutFlags(signLeafCmd)
+
+	addCrlFlag(signIntermediateCACmd)
+	addCrlFlag(signLeafCmd)
 
 	// 'sign intermediate-ca' only flags
 	signIntermediateCACmd.Flags().IntVar(

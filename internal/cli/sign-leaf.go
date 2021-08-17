@@ -24,6 +24,7 @@ func SignLeaf(
 	ipAddresses []net.IP,
 	isServer bool,
 	isClient bool,
+	crlDistributionPoints []string,
 	out *os.File,
 ) {
 	ctx := context.Background()
@@ -70,6 +71,10 @@ func SignLeaf(
 			leafCertificateTemplate.ExtKeyUsage,
 			x509.ExtKeyUsageClientAuth,
 		)
+	}
+
+	if len(crlDistributionPoints) > 0 {
+		leafCertificateTemplate.CRLDistributionPoints = crlDistributionPoints
 	}
 
 	certificateBytes, err := kmsSigner.CreateCertificate(
