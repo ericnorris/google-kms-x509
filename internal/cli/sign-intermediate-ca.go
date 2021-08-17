@@ -21,6 +21,7 @@ func SignIntermediateCA(
 	days int,
 	pathLen int,
 	permittedDNSDomains []string,
+	crlDistributionPoints []string,
 	out *os.File,
 ) {
 	ctx := context.Background()
@@ -59,6 +60,10 @@ func SignIntermediateCA(
 	if len(permittedDNSDomains) > 0 {
 		intermediateCertificateTemplate.PermittedDNSDomainsCritical = true
 		intermediateCertificateTemplate.PermittedDNSDomains = permittedDNSDomains
+	}
+
+	if len(crlDistributionPoints) > 0 {
+		intermediateCertificateTemplate.CRLDistributionPoints = crlDistributionPoints
 	}
 
 	certificateBytes, err := kmsSigner.CreateCertificate(
