@@ -98,7 +98,7 @@ Flags:
       --child-csr string                child CSR path
       --common-name string              x509 Distinguished Name (DN) field
       --country string                  x509 Distinguished Name (DN) field
-      --crl-dist-points             x509 CRL Distribution Points field
+      --crl-dist-points                 x509 CRL Distribution Points field
       --days int                        days until expiration
       --emailAddress string             x509 Distinguished Name (DN) field
       --generate-comment                generate an x509 comment showing the Google KMS key resource ID used (default true)
